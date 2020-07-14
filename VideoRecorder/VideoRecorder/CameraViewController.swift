@@ -24,6 +24,18 @@ class CameraViewController: UIViewController {
 		cameraView.videoPreviewLayer.videoGravity = .resizeAspectFill
         setUpCamera()
 	}
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        captureSession.startRunning()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        captureSession.stopRunning()
+    }
 
     private func setUpCamera() {
         let camera = bestCamera()
