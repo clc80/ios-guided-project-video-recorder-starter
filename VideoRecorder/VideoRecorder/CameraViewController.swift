@@ -43,8 +43,16 @@ class CameraViewController: UIViewController {
             
             playerView.frame = topRect
             view.addSubview(playerView)
+            
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(playRecording(_:)))
+            playerView.addGestureRecognizer(tapGesture)
         }
+    }
+    
+    @IBAction func playRecording(_ sender: UITapGestureRecognizer) {
+        guard sender.state == .ended else { return }
         
+        player.seek(to: CMTime(seconds: 0, preferredTimescale: 600)) // seconds  = N/D, D = 600
         player.play()
     }
     
