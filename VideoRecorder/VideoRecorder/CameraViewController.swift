@@ -14,6 +14,9 @@ class CameraViewController: UIViewController {
     lazy private var captureSession = AVCaptureSession()
     lazy private var fileOutput = AVCaptureMovieFileOutput()
 
+    lazy private var player = AVPlayer()
+    private var playerView: VideoPlayerView!
+    
     @IBOutlet var recordButton: UIButton!
     @IBOutlet var cameraView: CameraPreviewView!
 
@@ -25,6 +28,25 @@ class CameraViewController: UIViewController {
 		cameraView.videoPreviewLayer.videoGravity = .resizeAspectFill
         setUpCamera()
 	}
+    
+    func playMovie(url: URL) {
+        player.replaceCurrentItem(with: AVPlayerItem(url: url))
+        
+        if playerView == nil {
+            playerView = VideoPlayerView()
+            playerView.player = player
+            
+            var topRect = view.bounds
+            topRect.size.width /= 4
+            topRect.size.height /= 4
+            topRect.origin.y = view.layoutMargins.top
+            
+            playerView.frame = topRect
+            view.addSubview(playerView)
+        }
+        
+        player.play()
+    }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -114,7 +136,8 @@ extension CameraViewController: AVCaptureFileOutputRecordingDelegate {
             print("Error saving video: \(error)")
         }
         
-        print("Video URL: \(outputFileURL)")
+//        print("Video URL: \(outputFileURL)")
+        playMovie(url: outputFileURL)
         updateViews()
     }
     
